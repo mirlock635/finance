@@ -5,7 +5,7 @@ const Limiter=require('../middlewares/rate_limter')
 
 const auth_controller=require("../Controllers/auth_controller")
 const async_controller=require("../utils/async_controller")
-auth_controller =  async_controller(auth_controller)
+auth_controller =  async_controller(auth_controller) // can be moved to the buisness export
 
 router.use(Limiter)
 
