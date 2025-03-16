@@ -3,9 +3,9 @@ let JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
 
 
 async function signin(req,res){
-try{
+
 let user=req.body//not sure here verify others as well for non body parameters since middleware don't return
-let result=await Search(user,true)
+let result=await Search_user(user,true)
 console.log(result)
 if(result){
     console.log("already exist")
@@ -18,10 +18,7 @@ if(user_id>=0){
 }else{     return res.status(500).json({error:'Internal Server Error'})
 }
 }
-}catch(err){
-    console.error(err)
-    return res.status(500).json({error:'Internal Server Error'})
-}}
+}
 
 async function login(req,res){
     try{

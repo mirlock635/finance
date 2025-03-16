@@ -5,3 +5,4 @@ const Limiter=rateLimit({
     WindowMs:60 *1000,
     message:{error:"Too many requests, please try again later."}
 }) 
+module.exports=Limiter
