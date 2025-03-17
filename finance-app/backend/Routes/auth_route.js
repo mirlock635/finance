@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const router =express.Router()
 const Limiter=require('../middlewares/rate_limter')
 const validate_credentials = require("../middlewares/validate_credentials");
-const async_controller=require("../utils/async_controller")
+const {async_controller}=require("../utils/async_controller")
 
 const auth_controller_raw=require("../Controllers/auth_controller")
 const auth_controller =  async_controller(auth_controller_raw) // can be moved to the service export

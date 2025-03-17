@@ -2,7 +2,9 @@ const express=require('express')
 const router =express.Router()
 const Limiter=require('../middlewares/rate_limter')
 const {delete_account}=require("../Controllers/user_controller")
-const authenticate=require("../middlewares/authenticate")
+const {async_handler}=require("../utils/async_controller")
+let authenticate=require("../middlewares/authenticate")
+ authenticate=async_handler(authenticate);
 const cookieParser = require('cookie-parser');
 
 router.use(Limiter)

@@ -10,4 +10,4 @@ function async_controller(obj){
      
 
 } 
-module.exports=async_controller
+module.exports={async_controller,async_handler}
