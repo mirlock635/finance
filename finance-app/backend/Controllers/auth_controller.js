@@ -7,8 +7,10 @@ const {save_token,get_token,delete_token,generate_refresh_tokken,
  
 async function signin(req,res){
 let user=req.body
+console.log("user",user)
+
 let result=await Search_user(user,true) //true for  email only search
-console.log(result)
+console.log("user id",result)
 if(result){
     console.log("already exist")
     return res.status(409).json({error:"User found, try another email"}) // status code for conflict

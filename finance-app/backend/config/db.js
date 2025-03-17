@@ -1,4 +1,6 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config()
+console.log("env from db ",process.env.DB_USER)
 
 // Create Sequelize instance
 const sequelize = new Sequelize({
@@ -7,7 +9,7 @@ const sequelize = new Sequelize({
   username:process.env.DB_USER, 
   password:process.env.DB_PASS,
   database:process.env.DB_NAME,
-  logging: process.env.NODE_ENV === 'development'   // Optional: Disable logging of SQL queries (for production)
+  // Optional: Disable logging of SQL queries (for production)
 });
 
 module.exports=sequelize

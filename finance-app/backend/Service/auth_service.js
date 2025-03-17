@@ -1,8 +1,11 @@
 const User=require("../models/user_model")
+const bcrypt=require('bcrypt')
 
+const rounds=10; 
 async function Search_user(user,email_only_search=false) {
     try{    
         let result = await User.findOne({ where: { email: user.email } });
+        console.log("result is ",result)
         if(!result){ 
             return(undefined) } 
         if(email_only_search){
@@ -13,8 +16,8 @@ async function Search_user(user,email_only_search=false) {
         if(match){ return(result.id) }
         else{ return("Incorrect password") }
     } catch (err) {//re throw for debugging 
-        console.error("Database error");
-        throw err;
+        console.error(err);
+        throw new Error("Database error");
     }
     }
 
@@ -29,7 +32,7 @@ async function Add_user(user) {
         console.log('Added the user');
         return new_user.id; // Return the last inserted ID
     } catch (err) {//re throw for debugging 
-        console.error('Error adding user');
+        console.error(err);
         throw new Error('Failed to add user');
     }
 }
