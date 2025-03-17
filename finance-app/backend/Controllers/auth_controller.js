@@ -14,7 +14,7 @@ if(result){
     return res.status(409).json({error:"User found, try another email"}) // status code for conflict
 } else {
 const user_id= await Add_user(user)
-if(user_id>=0){
+if(user_id>=1){
     return res.status(200).json({message:"user added",id:user_id})  
 }else{     return res.status(500).json({error:'Internal Server Error'})
 }

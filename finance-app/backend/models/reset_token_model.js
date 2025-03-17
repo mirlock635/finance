@@ -3,14 +3,14 @@ const sequelize= require('../config/db') //
 const User=require("./user_model")
 
 const Reset_Token=sequelize.define('reset_tokens',{
-    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
-    token:{type:DataTypes.STRING,allowNull:false},
+    id:{type:Sequelize.INTEGER,primaryKey:true,autoIncrement:true},
+    token:{type:Sequelize.STRING,allowNull:false},
     expire_at: {
-        type: DataTypes.BIGINT,
+        type: Sequelize.BIGINT,
         allowNull: false,
     },
     user_id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
     }
 },
