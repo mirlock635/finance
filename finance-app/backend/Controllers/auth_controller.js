@@ -4,7 +4,7 @@ const Reset_Token=require("../models/reset_token_model")
 const {Search_user,Add_user,Delete_user_account,Reset_password}=require("../Service/auth_service")
 const {save_token,get_token,delete_token,generate_refresh_tokken,
     generate_reset_token,set_tokens}=require("../Service/")
-
+ 
 async function signin(req,res){
 let user=req.body
 let result=await Search_user(user,true) //true for  email only search
