@@ -1,6 +1,9 @@
+const Refresh_Token=require("../models/refresh_token_model")
+const {save_token,get_token,delete_token,generate_refresh_tokken,
+    set_tokens}=require("../Service/token_service")
 async function authenticate(req,res,next){
     let decoded=await verify_token(req,res);
-    if(!decoded)return
+    if(!decoded)return res.status(401).json({ error: "Unauthorized" });
     req.user = decoded; // user here is decoded token object
     next();
 }
@@ -9,7 +12,7 @@ async function verify_token(req,res) {
     const token = req.cookies.token;  // Access token from cookies
     const refresh_token = req.cookies.refresh_token;  // Refresh token from cookies
     if (!token) {
-        let db_token_check=await get_token(refresh_token,"refresh_tokens") //from db
+        let db_token_check=await get_token(refresh_token,Refresh_Token) //from db
         if (db_token_check&& db_token_check.expires_at > Date.now()) {
             return verify_refresh_token(refresh_token, res);  
         }else { res.status(401).json('Unauthorized'); return}
@@ -34,8 +37,8 @@ async function verify_refresh_token(refresh_token,res){
             console.log("refresh token exist")
             let new_access_token = generate_access_tokken(decoded.id);
             let new_refresh_token = generate_refresh_tokken(decoded.id);
-            await delete_token(decoded.id,"refresh_tokens");
-            await save_token(new_refresh_token, decoded.id);
+            await delete_token(decoded.id,Refresh_Token);
+            await save_token(new_refresh_token, decoded.id,Refresh_Token);
             set_tokens(res, new_access_token, new_refresh_token);
             return generate_tokken(decoded.id)
         }catch(err) {

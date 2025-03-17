@@ -11,7 +11,7 @@ async function Search_user(user,email_only_search=false) {
         const match=await bcrypt.compare(user.password, result.password)
         console.log('user found ',result)
         if(match){ return(result.id) }
-        else{ return(null) }
+        else{ return("Incorrect password") }
     } catch (err) {//re throw for debugging 
         console.error("Database error");
         throw err;

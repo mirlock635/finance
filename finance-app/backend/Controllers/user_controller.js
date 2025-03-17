@@ -15,3 +15,4 @@ async function delete_account(req,res){
     }
 
 }
+module.exports={delete_account}

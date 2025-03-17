@@ -25,7 +25,7 @@ async function login(req,res){
        const user=req.body
        const user_id = await Search_user(user); console.log('search for user',user_id) //thinking of seperate email and pass search
        if(user_id){
-           if(!user_id){
+           if(user_id=="Incorrect password"){
                res.status(400).json('Incorrect password')
                return
            }
@@ -80,4 +80,4 @@ async function handle_password_reset(req, res) {
         await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }
-module.exports={signin,login,handle_password_request,handle_password_reset,delete_account}
+module.exports={signin,login,handle_password_request,handle_password_reset}
