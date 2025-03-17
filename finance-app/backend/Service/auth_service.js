@@ -4,7 +4,7 @@ async function Search_user(user,email_only_search=false) {
     try{    
         let result = await User.findOne({ where: { email: user.email } });
         if(!result){ 
-            return(false) } 
+            return(undefined) } 
         if(email_only_search){
             return (result.id)
         }
