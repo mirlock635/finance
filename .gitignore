@@ -1,9 +1,0 @@
-# Ignore folders
-e_commerce_project/
-express_server/
-novice_files_used_for_learning/
-
-# Ignore files
-node_modules/
-package-lock.json
-package.json
