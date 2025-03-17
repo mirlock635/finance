@@ -1,18 +1,18 @@
 
-let JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
+const Refresh_Token=require("../models/refresh_token_model")
+const Reset_Token=require("../models/reset_token_model")
+const {Search_user,Add_user,Delete_user_account,Reset_password}=require("../business/auth_business")
 
 
 async function signin(req,res){
-
-let user=req.body//not sure here verify others as well for non body parameters since middleware don't return
-let result=await Search_user(user,true)
+let user=req.body
+let result=await Search_user(user,true) //true for  email only search
 console.log(result)
 if(result){
     console.log("already exist")
     return res.status(409).json({error:"User found, try another email"}) // status code for conflict
 } else {
-const user_id= await addUser(user)
-console.log('new user id : ',user_id)
+const user_id= await Add_user(user)
 if(user_id>=0){
     return res.status(200).json({message:"user added",id:user_id})  
 }else{     return res.status(500).json({error:'Internal Server Error'})
@@ -21,9 +21,8 @@ if(user_id>=0){
 }
 
 async function login(req,res){
-    try{
        const user=req.body
-       const user_id = await Search(user); console.log('search for user',user_id) //thinking of seperate email and pass search
+       const user_id = await Search_user(user); console.log('search for user',user_id) //thinking of seperate email and pass search
        if(user_id){
            if(!user_id){
                res.status(400).json('Incorrect password')
@@ -39,56 +38,58 @@ async function login(req,res){
            res.status(404).json({error:'user not found'})
            return
        }
-   }catch(err){
-       console.error('Error in handle_Signin:', err);
-       return res.status(500).json({error:'Internal Server Error'})
-   }
+}
+
+async function delete_account(req,res){
+    const id= req.user.id;// user here is decoded token object
+    const changes=await Delete_user_account(id)
+    console.log("user deleted ",changes)
+    if (changes>0) {
+         res.status(200).json({message:'user deleted'})
+        console.log('deleting response sent')
+    } else {
+        console.log('user not found')
+        res.status(404).json('User not found')
+       return
+    }
 
 }
 
-
 async function handle_password_request(req, res) {
-    try {
         const { email } = req.body;
         console.log("searching")
-        let id = await Search({ email }, true); 
+        let id = await Search_user({ email }, true); 
         console.log("id ",id) // Search user by email
         if (id && id >= 0) {
-            await delete_token(id,"reset_tokens");  // Remove old reset tokens
+            await delete_token(id,Reset_Token);  // Remove old reset tokens
             let token = generate_reset_token();
-            await save_token(id, token,"reset_tokens");
+            await save_token(id, token,Reset_Token);
             await send_reset_email(email , token);
         }else{
             res.status(400).json({ message: "failed email sending " });
         }
 
         res.status(200).json({ message: " a reset link has been sent." });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error." });
-    }
 }
+
 async function handle_password_reset(req, res) {
         const { reset_token , password } = req.body;
-        let row = await get_token(reset_token,"reset_tokens");
+        let row = await get_token(reset_token,Reset_Token);
         if (!row) {
             return res.status(404).json({ error: "Invalid reset token" });
         }
-/* btw if this token randomly generated then why not just make refresh token like this 
-and check its validation from its table instead of use jwt to check its date ?
-so if i use that jwt benefit is  only check if it's made from the secret key but does that matter a lot ?
-*/
         const { user_id, expires_at } = row;
         console.log('id ',user_id,"expire ",expires_at)
         if (expires_at < Date.now()) {
-            await delete_token(user_id,"reset_tokens");
+            await delete_token(user_id,Reset_Token);
             return res.status(400).json({ error: "Reset token expired" });
         }
-        let changes = await reset_password(user_id, password);
+        let changes = await Reset_password(user_id, password);
         if (changes === 0) {
             return res.status(500).json({ error: "Failed to reset password" });
         }
 
-        await delete_token(user_id,"reset_tokens");
+        await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }
+module.exports={signin,login,handle_password_request,handle_password_reset,delete_account}

@@ -1,5 +1,6 @@
 const expres =require('express')
 const user_route=require("./Routes/auth_route")
+const error_handler=require('./middlewares/error_middleware')
 const app=expres();
 
 app.use(express.json());
@@ -15,5 +16,5 @@ app.use(cors({
 app.use(morgan("dev"));
 
 app.use("auth",user_route)
-
+app.use(error_handler)
 module.exports=app
