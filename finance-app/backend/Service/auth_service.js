@@ -5,14 +5,12 @@ const rounds=10;
 async function Search_user(user,email_only_search=false) {
     try{    
         let result = await User.findOne({ where: { email: user.email } });
-        console.log("result is ",result)
         if(!result){ 
             return(undefined) } 
         if(email_only_search){
             return (result.id)
         }
         const match=await bcrypt.compare(user.password, result.password)
-        console.log('user found ',result)
         if(match){ return(result.id) }
         else{ return("Incorrect password") }
     } catch (err) {//re throw for debugging 
@@ -46,7 +44,6 @@ async function Reset_password(user_id,password){ //might deleted this and add it
     const user =await User.findOne({where:{id:user_id}})
     if (!user)  throw Object.assign(new Error('User Not Found'), { statusCode: 404 });
     const [affected_rows]=await User.update( {password: hashed_password} , {where: {id:user_id}} )
-
     console.log("password updated with number of changes ",affected_rows)
     }catch(err) {
         console.error('Error resetting password');

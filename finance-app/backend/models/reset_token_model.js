@@ -5,7 +5,7 @@ const User=require("./user_model")
 const Reset_Token=sequelize.define('reset_tokens',{
     id:{type:Sequelize.INTEGER,primaryKey:true,autoIncrement:true},
     token:{type:Sequelize.STRING,allowNull:false},
-    expire_at: {
+    expires_at : {
         type: Sequelize.BIGINT,
         allowNull: false,
     },
@@ -14,7 +14,7 @@ const Reset_Token=sequelize.define('reset_tokens',{
         allowNull: false,
     }
 },
-{  timestamps: false  }
+{underscored: true, timestamps: false, }
 );
 Reset_Token.belongsTo(User,{
     foreignKey:"user_id",

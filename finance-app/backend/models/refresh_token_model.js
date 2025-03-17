@@ -5,7 +5,7 @@ const User=require("./user_model")
 const Refresh_Token=sequelize.define('refresh_tokens',{
     id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
     token:{type:DataTypes.STRING,allowNull:false},
-    expire_at: {
+    expires_at : {
         type: DataTypes.BIGINT,
         allowNull: false,
     },
@@ -14,8 +14,7 @@ const Refresh_Token=sequelize.define('refresh_tokens',{
         allowNull: false,
     }
 },
-{   timestamps: false
-}
+{underscored: true, timestamps: false, }
 );
 Refresh_Token.belongsTo(User,{
     foreignKey:"user_id",

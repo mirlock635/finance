@@ -1,13 +1,19 @@
 // models are passed through parameters no need to call
+const jwt=require('jsonwebtoken');
+const crypto = require('crypto');
+
 const  JWT_SECRET=process.env.JWT_SECRET
 const JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
+const access_token_age=120;
+const refresh_token_age=604800;
 
 async function save_token(user_id,token,token_model){
-    const expire_at=Date.now()+1000*3600*24*7;
-    const result = await token_model.create({ token, expire_at, user_id });
+    const expires_at=Date.now()+1000*3600*24*7;
+    const result = await token_model.create({ token, expires_at, user_id });
     console.log("refresh Token saved", result.id); //create have the instance of user
 }
 async function get_token(token,Token_model){
+    console.log("token",token)
     const result=await Token_model.findOne( {where:{token}} )
     console.log('row of getting  token',result)
     return result  // Return row with user_id and reset_expires
@@ -23,10 +29,10 @@ async function delete_token(user_id,Token_model){
 function generate_reset_token() {
     return crypto.randomBytes(20).toString('hex');
   }
-function generate_access_tokken(user_id){
+function generate_access_token(user_id){
     return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'2m'});
     }
-function generate_refresh_tokken(user_id){
+function generate_refresh_token(user_id){
         return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'7d'});
     }
 function set_tokens(res, token, refresh_token) {
@@ -90,5 +96,5 @@ async function verify_refresh_token(refresh_token,res){
             return false;
         }
 }
-module.exports={save_token,get_token,delete_token,generate_refresh_tokken,
-    generate_access_tokken,generate_reset_token,clear_tokens,set_tokens}
+module.exports={save_token,get_token,delete_token,generate_refresh_token,
+    generate_access_token,generate_reset_token,clear_tokens,set_tokens}
