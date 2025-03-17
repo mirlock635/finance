@@ -7,5 +7,7 @@ function async_controller(obj){
     return Object.fromEntries(Object.entries(obj).map( 
         ([key,fn]) =>[key,async_handler(fn)] 
         ) )
+     
+
 } 
 module.exports=async_controller

@@ -10,3 +10,4 @@ router.use(express.json())
 router.use(cookieParser())
 
 router.delete("/delete_account",authenticate,delete_account)
+module.exports=router

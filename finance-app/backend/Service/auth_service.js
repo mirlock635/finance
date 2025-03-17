@@ -50,4 +50,4 @@ async function Reset_password(user_id,password){ //might deleted this and add it
         throw new Error('Failed to reset password');
     }
 }
-module.exports={Search_user,Add_user,Delete_user_account,Reset_password}
+module.exports={Search_user,Add_user,Reset_password}

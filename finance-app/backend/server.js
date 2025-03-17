@@ -1,7 +1,6 @@
 const http=require('http');
 const app =require('./app.js')
-require('dotenv').config({path:".env"})
-console.log(process.env.PORT)
+require('dotenv').config({path:"../.env"})
 
 
 const server =http.createServer(app);

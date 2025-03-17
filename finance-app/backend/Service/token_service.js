@@ -8,9 +8,9 @@ async function save_token(user_id,token,token_model){
     console.log("refresh Token saved", result.id); //create have the instance of user
 }
 async function get_token(token,Token_model){
-    const token=await Token_model.findOne( {where:{token}} )
-    console.log('row of getting  token',token)
-    return token  // Return row with user_id and reset_expires
+    const result=await Token_model.findOne( {where:{token}} )
+    console.log('row of getting  token',result)
+    return result  // Return row with user_id and reset_expires
 }
 async function delete_token(user_id,Token_model){
     const result =await Token_model.destroy({ where: { user_id } });

@@ -1,8 +1,11 @@
 const express =require('express')
-const user_route=require("./Routes/auth_route")
+const auth_route=require("./Routes/auth_route")
+const user_route=require("./Routes/user_routes")
 const error_handler=require('./middlewares/error_middleware')
 const app=express();
 const cors = require('cors');
+const helmet=require("helmet")
+const morgan=require("morgan")
 
 
 
@@ -16,7 +19,8 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan("dev"));
 
-app.use("/auth",user_route)
-
+app.use("/auth",auth_route)
+app.use("/user",user_route)
 app.use(error_handler)
+
 module.exports=app

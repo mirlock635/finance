@@ -8,3 +8,4 @@ function validate_credentials(req,res,next){
            }//handle with error middleware
     next()
 }
+module.exports=validate_credentials
