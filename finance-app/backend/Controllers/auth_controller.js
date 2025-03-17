@@ -1,9 +1,9 @@
 
 const Refresh_Token=require("../models/refresh_token_model")
 const Reset_Token=require("../models/reset_token_model")
-const {Search_user,Add_user,Delete_user_account,Reset_password}=require("../Service/auth_service")
+const {Search_user,Add_user,Reset_password}=require("../Service/auth_service")
 const {save_token,get_token,delete_token,generate_refresh_tokken,
-    generate_reset_token,set_tokens}=require("../Service/")
+    generate_reset_token,set_tokens}=require("../Service/token_service")
  
 async function signin(req,res){
 let user=req.body
@@ -41,20 +41,7 @@ async function login(req,res){
        }
 }
 
-async function delete_account(req,res){
-    const id= req.user.id;// user here is decoded token object
-    const changes=await Delete_user_account(id)
-    console.log("user deleted ",changes)
-    if (changes>0) {
-         res.status(200).json({message:'user deleted'})
-        console.log('deleting response sent')
-    } else {
-        console.log('user not found')
-        res.status(404).json('User not found')
-       return
-    }
 
-}
 
 async function handle_password_request(req, res) {
         const { email } = req.body;
