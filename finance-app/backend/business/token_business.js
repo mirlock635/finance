@@ -16,7 +16,8 @@ async function delete_token(user_id,Token_model){
     else{ console.log("token deleted , changes : ",result); }
 }
 
-// utils token functions 
+// utils token functions  
+
 function generate_reset_token() {
     return crypto.randomBytes(20).toString('hex');
   }
