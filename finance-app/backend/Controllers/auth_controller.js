@@ -1,8 +1,9 @@
 
 const Refresh_Token=require("../models/refresh_token_model")
 const Reset_Token=require("../models/reset_token_model")
-const {Search_user,Add_user,Delete_user_account,Reset_password}=require("../business/auth_business")
-
+const {Search_user,Add_user,Delete_user_account,Reset_password}=require("../Service/auth_service")
+const {save_token,get_token,delete_token,generate_refresh_tokken,
+    generate_reset_token,set_tokens}=require("../Service/token_service")
 
 async function signin(req,res){
 let user=req.body
@@ -28,10 +29,10 @@ async function login(req,res){
                res.status(400).json('Incorrect password')
                return
            }
-           const tokken=middleware.generate_access_tokken(user_id);
-           const refresh_token=middleware.generate_refresh_tokken(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
-           await save_token(user_id,refresh_token,"refresh_tokens")
-           middleware.set_tokens(res,tokken,refresh_token);
+           const tokken=generate_access_token(user_id);
+           const refresh_token=generate_refresh_tokken(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
+           await save_token(user_id,refresh_token,Refresh_Token)
+           set_tokens(res,tokken,refresh_token);
            res.status(200).json("login successfully")
            return
        }else{

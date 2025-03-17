@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize= require('../config/db')
+const sequelize= require('../config/db') //
 const User=require("./user_model")
 
 const Reset_Token=sequelize.define('reset_tokens',{
