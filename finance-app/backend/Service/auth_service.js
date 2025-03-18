@@ -27,7 +27,7 @@ async function Add_user(user) {
             email: user.email,
             password: hashed_password,
         });
-        console.log('Added the user');
+        console.log('user Added ');
         return new_user.id; // Return the last inserted ID
     } catch (err) {//re throw for debugging 
         console.error(err);
