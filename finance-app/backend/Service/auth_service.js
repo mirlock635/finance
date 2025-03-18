@@ -15,7 +15,7 @@ async function Search_user(user,email_only_search=false) {
         else{ return("Incorrect password") }
     } catch (err) {//re throw for debugging 
         console.error(err);
-        throw new Error("Database error");
+        throw new Error();
     }
     }
 
@@ -46,7 +46,7 @@ async function Reset_password(user_id,password){ //might deleted this and add it
     const [affected_rows]=await User.update( {password: hashed_password} , {where: {id:user_id}} )
     console.log("password updated with number of changes ",affected_rows)
     }catch(err) {
-        console.error('Error resetting password');
+        console.error('Error resetting password : ' ,err);
         throw new Error('Failed to reset password');
     }
 }

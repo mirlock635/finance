@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize= require('../config/db') //
 const User=require("./user_model")
 
+//delete unused tokens every while 
 const Reset_Token=sequelize.define('reset_tokens',{
     id:{type:Sequelize.INTEGER,primaryKey:true,autoIncrement:true},
     token:{type:Sequelize.STRING,allowNull:false},

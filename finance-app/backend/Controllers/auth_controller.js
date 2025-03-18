@@ -5,6 +5,7 @@ const {Search_user,Add_user,Reset_password}=require("../Service/auth_service")
 const {save_token,get_token,delete_token,generate_refresh_token,generate_access_token,
     generate_reset_token,set_tokens}=require("../Service/token_service")
 const send_reset_email=require("../Service/email_service");
+
 async function signin(req,res){
 let user=req.body
 let result=await Search_user(user,true) //true for  email only search
@@ -23,21 +24,19 @@ if(user_id>=1){
 async function login(req,res){
        const user=req.body
        const user_id = await Search_user(user); console.log('search for user',user_id) //thinking of seperate email and pass search
-       if(user_id){
-           if(user_id=="Incorrect password"){
+       if(!user_id){
+        res.status(404).json({error:'user not found'})
+       return }
+
+        if(user_id=="Incorrect password"){
                res.status(400).json('Incorrect password')
                return
-           }
-           const tokken=generate_access_token(user_id);
-           const refresh_token=generate_refresh_token(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
-           await save_token(user_id,refresh_token,Refresh_Token)
-           set_tokens(res,tokken,refresh_token);
-           res.status(200).json("login successfully")
-           return
-       }else{
-           res.status(404).json({error:'user not found'})
-           return
-       }
+        }
+        const tokken=generate_access_token(user_id);
+        const refresh_token=generate_refresh_token(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
+        await save_token(user_id,refresh_token,Refresh_Token)
+        set_tokens(res,tokken,refresh_token);
+        res.status(200).json("login successfully")       
 }
 
 
@@ -50,7 +49,7 @@ async function handle_password_request(req, res) {
         if (id && id >= 0) {
             await delete_token(id,Reset_Token);  // Remove old reset tokens
             let token = generate_reset_token();
-            await save_token(id, token,Reset_Token);
+            await save_token(id, token,Reset_Token,1);
             await send_reset_email(email , token);
         }else{
             res.status(400).json({ message: "failed email sending " });
@@ -60,7 +59,8 @@ async function handle_password_request(req, res) {
 }
 
 async function handle_password_reset(req, res) {
-        const { reset_token , password } = req.body;
+        const { password } = req.body;
+        const reset_token=req.query.reset_token;
         let row = await get_token(reset_token,Reset_Token);
         if (!row) {
             return res.status(404).json({ error: "Invalid reset token" });

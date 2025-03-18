@@ -17,7 +17,10 @@ const {save_token,get_token,delete_token,generate_access_token
                 req.user_id=id; // set id from token for auth_controller to use
                 return next();
             }catch (err){
-                console.log('Invalid access token');//expected
+                if(err.message=="Invalid token payload"){
+                    throw err
+                }
+                console.log('Invalid access token');//expected  
             }      
         }
         console.error("invalid access token" )
@@ -41,6 +44,8 @@ const {save_token,get_token,delete_token,generate_access_token
     if (db_token && db_token.expires_at > Date.now()) {
     return await rotate_tokens(db_token,res);
     }
+    // might delete the token if expired
+
     throw  Object.assign(new Error('Unauthorized invalid refresh token'), { statusCode: 401 });
     }
 
