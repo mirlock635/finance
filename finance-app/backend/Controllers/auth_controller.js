@@ -11,12 +11,13 @@ let user=req.body
 let result=await Search_user(user,true) //true for  email only search
 console.log("user id",result)
 if(result){
-    return res.status(409).json({error:"User found, try another email"}) // status code for conflict
+    return res.status(409).json({error:"Email already used. Try a different one"}) // status code for conflict
 } else {
 const user_id= await Add_user(user)
 if(user_id>=1){
-    return res.status(200).json({message:"user added",id:user_id})  
-}else{     return res.status(500).json({error:'Internal Server Error'})
+    return res.status(201).json({message:"User created",id:user_id})  
+}else{
+    return res.status(500).json({error:'Internal Server Error'})
 }
 }
 }
