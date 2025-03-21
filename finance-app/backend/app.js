@@ -17,7 +17,7 @@ app.use(cors({
   }));
 
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan("dev")); 
 
 app.use("/auth",auth_route)
 app.use("/user",user_route)

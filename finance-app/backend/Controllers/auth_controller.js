@@ -61,7 +61,7 @@ async function handle_password_request(req, res) {
 
 async function handle_password_reset(req, res) {
         const { password } = req.body;
-        const reset_token=req.query.reset_token;
+        const reset_token=req.params.reset_token;
         let row = await get_token(reset_token,Reset_Token);
         if (!row) {
             return res.status(404).json({ error: "Invalid reset token" });
@@ -76,7 +76,6 @@ async function handle_password_reset(req, res) {
         if (changes === 0) {
             return res.status(500).json({ error: "Failed to reset password" });
         }
-
         await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }

@@ -16,7 +16,7 @@ async function save_token(user_id,token,token_model,expires_in_days=7*24*4){
 async function get_token(token,Token_model){
     console.log("token",token)
     const result=await Token_model.findOne( {where:{token}} )
-    console.log('token result object  ',result?.dataValues)
+    console.log('token result object  ',result)
     return result  // Return row with user_id and reset_expires
 }
 async function delete_token(user_id,Token_model){

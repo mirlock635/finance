@@ -18,6 +18,6 @@ router.use(cookieParser())
 //router.get("/logout",auth_controller.logout) 
 
 router.post("/reset_password_request",validate_reset_email,auth_controller.handle_password_request)
-router.post("/reset_password",validate_new_password,auth_controller.handle_password_reset)
+router.post("/reset_password/:reset_token",validate_new_password,auth_controller.handle_password_reset)
 
 module.exports=router
