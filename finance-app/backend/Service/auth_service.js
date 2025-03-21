@@ -15,7 +15,7 @@ async function Search_user(user,email_only_search=false) {
         else{ return("Incorrect password") }
     } catch (err) {//re throw for debugging 
         console.error(err);
-        throw new Error();
+        throw new Error("Internal Server Error");
     }
     }
 
@@ -47,7 +47,7 @@ async function Reset_password(user_id,password){ //might deleted this and add it
     console.log("password updated with number of changes ",affected_rows)
     }catch(err) {
         console.error('Error resetting password : ' ,err);
-        throw new Error('Failed to reset password');
+        throw new Error('Failed  reset password');
     }
 }
 module.exports={Search_user,Add_user,Reset_password}

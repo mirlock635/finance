@@ -9,14 +9,16 @@ function validate_credentials(req,res,next){
            }//handle with error middleware
     next()
 }
-function validate_reset_email(email){
+function validate_reset_email(req,res,next){
+    let {email}=req.body
     if(!email_pattern.test(email)){
             console.log('Invalid email')
             return res.status(400).json({error:'Invalid Email'}); 
            }//handle with error middleware
     next()
 }
-function validate_new_password(email){
+function validate_new_password(req,res,next){
+    let {password}=req.body
     if(password.length < 8){
             console.log('Invalid Password')
             return res.status(400).json({error:'Invalid Password'}); 

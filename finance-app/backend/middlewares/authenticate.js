@@ -1,6 +1,7 @@
 const Refresh_Token=require("../models/refresh_token_model")
 const {save_token,get_token,delete_token,generate_access_token
     ,generate_refresh_token,set_tokens}=require("../Service/token_service")
+
     const jwt=require('jsonwebtoken')
 
     const  JWT_SECRET=process.env.JWT_SECRET
@@ -17,10 +18,12 @@ const {save_token,get_token,delete_token,generate_access_token
                 req.user_id=id; // set id from token for auth_controller to use
                 return next();
             }catch (err){
-                if(err.message=="Invalid token payload"){
+                 if (err.name === "TokenExpiredError") {
+                    console.warn("Access token expired, attempting refresh...");
+                } else if(err.message=="Invalid token payload"){
                     throw err
                 }
-                console.log('Invalid access token');//expected  
+                console.error("Invalid access token:", err.message);//expected  
             }      
         }
         console.error("invalid access token" )
@@ -41,13 +44,12 @@ const {save_token,get_token,delete_token,generate_access_token
     }
     // token_object
     let db_token=await get_token(refresh_token,Refresh_Token); //get from db to protect against manipulation
-    if (db_token && db_token.expires_at > Date.now()) {
+    if (!db_token || db_token.expires_at <= Date.now()) {
+        await rotate_tokens(db_token,res);    // delete the token if expired
+        throw  Object.assign(new Error('Unauthorized invalid refresh token'), { statusCode: 401 });
+    }
     return await rotate_tokens(db_token,res);
-    }
-    // might delete the token if expired
-
-    throw  Object.assign(new Error('Unauthorized invalid refresh token'), { statusCode: 401 });
-    }
+}
 
     async function rotate_tokens(refresh_token,res){
         let new_access_token = generate_access_token(refresh_token.id);
@@ -57,8 +59,6 @@ const {save_token,get_token,delete_token,generate_access_token
         set_tokens(res, new_access_token, new_refresh_token);
         return refresh_token.user_id
     }  
-
-
 
 
 module.exports=authenticate

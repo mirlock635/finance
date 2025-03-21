@@ -35,6 +35,7 @@ async function login(req,res){
         }
         const tokken=generate_access_token(user_id);
         const refresh_token=generate_refresh_token(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
+        await delete_token(user_id,Refresh_Token); //delete old tokens
         await save_token(user_id,refresh_token,Refresh_Token)
         set_tokens(res,tokken,refresh_token);
         res.status(200).json("login successfully")       
@@ -44,7 +45,7 @@ async function login(req,res){
 
 async function handle_password_request(req, res) {
         const { email } = req.body;
-        console.log("searching")
+        console.log("searching ,",email)
         let id = await Search_user({ email }, true); 
         console.log("id ",id) // Search user by email
         if (id && id >= 0) {
@@ -61,7 +62,7 @@ async function handle_password_request(req, res) {
 
 async function handle_password_reset(req, res) {
         const { password } = req.body;
-        const reset_token=req.query.reset_token;
+        const reset_token=req.params.reset_token;
         let row = await get_token(reset_token,Reset_Token);
         if (!row) {
             return res.status(404).json({ error: "Invalid reset token" });
@@ -76,7 +77,6 @@ async function handle_password_reset(req, res) {
         if (changes === 0) {
             return res.status(500).json({ error: "Failed to reset password" });
         }
-
         await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }

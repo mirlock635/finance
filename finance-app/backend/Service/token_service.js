@@ -16,7 +16,7 @@ async function save_token(user_id,token,token_model,expires_in_days=7*24*4){
 async function get_token(token,Token_model){
     console.log("token",token)
     const result=await Token_model.findOne( {where:{token}} )
-    console.log('token result object  ',result?.dataValues)
+    console.log('token result object  ',result)
     return result  // Return row with user_id and reset_expires
 }
 async function delete_token(user_id,Token_model){
@@ -31,10 +31,10 @@ function generate_reset_token() {
     return crypto.randomBytes(20).toString('hex');
   }
 function generate_access_token(user_id){
-    return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'15m'});
+    return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'1m'});
     }
 function generate_refresh_token(user_id){
-        return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'7d'});
+        return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'1m'});
     }
 function set_tokens(res, token, refresh_token) {
     res.setHeader('Set-Cookie', [
