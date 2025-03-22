@@ -6,8 +6,10 @@ const app=express();
 const cors = require('cors');
 const helmet=require("helmet")
 const morgan=require("morgan")
+const Dynamic_rate_limiter=require('./middlewares/rate_limter')
 
 
+app.use(Dynamic_rate_limiter)
 
 app.use(cors({
     origin: ["http://localhost:3000", "http://127.0.0.1:3000"],  // Change this to your frontend URL if needed

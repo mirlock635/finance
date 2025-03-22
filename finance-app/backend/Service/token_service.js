@@ -31,10 +31,10 @@ function generate_reset_token() {
     return crypto.randomBytes(20).toString('hex');
   }
 function generate_access_token(user_id){
-    return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'15m'});
+    return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'1m'});
     }
 function generate_refresh_token(user_id){
-        return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'7d'});
+        return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'1m'});
     }
 function set_tokens(res, token, refresh_token) {
     res.setHeader('Set-Cookie', [

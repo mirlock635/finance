@@ -35,6 +35,7 @@ async function login(req,res){
         }
         const tokken=generate_access_token(user_id);
         const refresh_token=generate_refresh_token(user_id); //console.log('created access tokken ',tokken); console.log("created refresh_token",refresh_token);
+        await delete_token(user_id,Refresh_Token); //delete old tokens
         await save_token(user_id,refresh_token,Refresh_Token)
         set_tokens(res,tokken,refresh_token);
         res.status(200).json("login successfully")       
@@ -44,7 +45,7 @@ async function login(req,res){
 
 async function handle_password_request(req, res) {
         const { email } = req.body;
-        console.log("searching")
+        console.log("searching ,",email)
         let id = await Search_user({ email }, true); 
         console.log("id ",id) // Search user by email
         if (id && id >= 0) {
