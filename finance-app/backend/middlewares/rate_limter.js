@@ -1,5 +1,4 @@
 const rateLimit = require('express-rate-limit')
-
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const GENERAL_MESSAGE = "Too many requests, try again later.";
 

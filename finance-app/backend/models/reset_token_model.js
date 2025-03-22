@@ -1,19 +1,12 @@
-const Sequelize = require('sequelize');
-const sequelize= require('../config/db') //
+const { DataTypes } = require('sequelize');// no need to import the whole sequelize object 
+const sequelize= require('../config/db') 
 const User=require("./user_model")
 
-//delete unused tokens every while 
 const Reset_Token=sequelize.define('reset_tokens',{
-    id:{type:Sequelize.INTEGER,primaryKey:true,autoIncrement:true},
-    token:{type:Sequelize.STRING,allowNull:false},
-    expires_at : {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-    },
-    user_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-    }
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    token:{type:DataTypes.STRING,allowNull:false},
+    expires_at : {type: DataTypes.BIGINT,allowNull: false,},
+    user_id: {type: DataTypes.INTEGER,allowNull: false,}
 },
 {underscored: true, timestamps: false, }
 );

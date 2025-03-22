@@ -1,20 +1,23 @@
 
 const Refresh_Token=require("../models/refresh_token_model")
 const Reset_Token=require("../models/reset_token_model")
-const {Search_user,Add_user,Reset_password}=require("../Service/auth_service")
+
+const {validate,search_user_by_email,verify_user,Add_user,Reset_password}=require("../Service/auth_service")
 const {save_token,get_token,delete_token,generate_refresh_token,generate_access_token,
     generate_reset_token,set_tokens}=require("../Service/token_service")
-const send_reset_email=require("../Service/email_service");
+const send_email=require("../Service/email_service");
 
-async function signin(req,res){
+async function sign_up(req,res){
 let user=req.body
-let result=await Search_user(user,true) //true for  email only search
-console.log("user id",result)
-if(result){
+let result=await search_user_by_email(user.email) 
+console.log("user id",result?.id)
+if(result?.id){
     return res.status(409).json({error:"Email already used. Try a different one"}) // status code for conflict
 } else {
-const user_id= await Add_user(user)
+const {user_id,token}= await Add_user(user)
+console.log("email token",token,"email",user.email)
 if(user_id>=1){
+    await send_email(user.email ,token,"verification");
     return res.status(201).json({message:"User created",id:user_id})  
 }else{
     return res.status(500).json({error:'Internal Server Error'})
@@ -24,7 +27,7 @@ if(user_id>=1){
 
 async function login(req,res){
        const user=req.body
-       const user_id = await Search_user(user); console.log('search for user',user_id) //thinking of seperate email and pass search
+       const user_id = await verify_user(user); console.log('search for user',user_id) //thinking of seperate email and pass search
        if(!user_id){
         res.status(404).json({error:'user not found'})
        return }
@@ -41,6 +44,13 @@ async function login(req,res){
         res.status(200).json("login successfully")       
 }
 
+async function validate_user(req,res){
+    let result =await validate(req)
+    console.log("result",result)
+    if(!result) return res.status(400).json({error:"validation error"}) 
+    console.log("user_verified")
+    res.status(200).json({message:"user verified"})
+}
 
 
 async function handle_password_request(req, res) {
@@ -52,9 +62,9 @@ async function handle_password_request(req, res) {
             await delete_token(id,Reset_Token);  // Remove old reset tokens
             let token = generate_reset_token();
             await save_token(id, token,Reset_Token,1);
-            await send_reset_email(email , token);
+            await send_email(email , token,"reset");
         }else{
-            res.status(400).json({ message: "failed email sending " });
+            res.status(400).json({ error: "failed email sending " });
         }
 
         res.status(200).json({ message: " a reset link has been sent." });
@@ -80,4 +90,4 @@ async function handle_password_reset(req, res) {
         await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }
-module.exports={signin,login,handle_password_request,handle_password_reset}
+module.exports={validate_user,sign_up,login,handle_password_request,handle_password_reset}

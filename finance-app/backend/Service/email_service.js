@@ -12,17 +12,31 @@ const transporter = nodemailer.createTransport({
     } 
     ,tls: { rejectUnauthorized: false }
   });
-async function send_reset_email(email,token){
-    const resetLink = `http://127.0.0.1:3000/auth/reset_pass.html?token=${token}`;
-  
+
+let email_data={
+  "reset": {
+    url:"http://127.0.0.1:3000/auth/reset_pass.html",
+    subject:'reset',
+    text:"Click this link to reset your Password"
+
+}
+  ,"verification": {
+  url:"http://127.0.0.1:3000/auth/verify",
+  subject:'verification',
+  text:"Click this link to verify your account"
+}
+}
+async function send_email(email,token,type){
+    const resetLink = `${email_data[type].url}?token=${token}`;
+
     await transporter.sendMail({
       from: `"Finance_app" <${process.env.my_EMAIL}>`,  
       replyTo: process.env.my_EMAIL, 
       to: email,
-      subject: 'Password Reset',
-      text: `Click this link to reset your password: 
+      subject: email_data[type].subject,
+      text: `${email_data[type].text}: 
       ${resetLink}`,
     });
 }
 
-module.exports=send_reset_email
+module.exports=send_email

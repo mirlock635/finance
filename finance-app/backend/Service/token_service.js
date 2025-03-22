@@ -8,10 +8,10 @@ const access_token_age=120;
 const refresh_token_age=604800;
 
 async function save_token(user_id,token,token_model,expires_in_days=7*24*4){
-    console.log("save token","user id",user_id,token,token_model)
+    console.log("save token",token,"user_id",user_id,token_model)
     const expires_at=Date.now()+1000*60*15*expires_in_days;
     const result = await token_model.create({ token, expires_at, user_id });
-    console.log("refresh Token saved", result.id); //create have the instance of user
+    console.log(" Token  saved id", result.id,"result",result.dataValues); //create have the instance of user
 }
 async function get_token(token,Token_model){
     console.log("token",token)
@@ -28,7 +28,7 @@ async function delete_token(user_id,Token_model){
 // utils token functions  
 
 function generate_reset_token() {
-    return crypto.randomBytes(20).toString('hex');
+    return crypto.randomBytes(32).toString('hex');
   }
 function generate_access_token(user_id){
     return jwt.sign({id:user_id},JWT_SECRET,{expiresIn:'1m'});
@@ -36,6 +36,9 @@ function generate_access_token(user_id){
 function generate_refresh_token(user_id){
         return jwt.sign({id:user_id},JWT_REFRESH_SECRET,{expiresIn:'1m'});
     }
+function generate_verification_token(){
+return crypto.randomBytes(32).toString("hex");
+}
 function set_tokens(res, token, refresh_token) {
     res.setHeader('Set-Cookie', [
         `token=${token}; HttpOnly; SameSite=Lax; Max-Age=${access_token_age}; Path=/`,
@@ -53,4 +56,4 @@ function clear_tokens(res){
 }
 
 module.exports={save_token,get_token,delete_token,generate_refresh_token,
-    generate_access_token,generate_reset_token,clear_tokens,set_tokens}
+    generate_access_token,generate_reset_token,clear_tokens,set_tokens,generate_verification_token}
