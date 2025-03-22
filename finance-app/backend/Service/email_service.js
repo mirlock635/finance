@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.my_SMTP_EMAIL,
         pass: process.env.my_SMTP_PASSWORD
-    }
+    } 
     ,tls: { rejectUnauthorized: false }
   });
 async function send_reset_email(email,token){
