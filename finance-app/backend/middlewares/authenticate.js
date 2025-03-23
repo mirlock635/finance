@@ -1,17 +1,18 @@
 const Refresh_Token=require("../models/refresh_token_model")
 const {save_token,get_token,delete_token,generate_access_token
     ,generate_refresh_token,set_tokens}=require("../Service/token_service")
-const Verification_token=require('../models/verification_token_model')
+const Verification_token=require('../models/verification_token_model');
 const jwt=require('jsonwebtoken')
 
 const  JWT_SECRET=process.env.JWT_SECRET
 const JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
+
 async function authenticate_verification_token(req,res,next){
     let token=req.params.v_token;
     console.log("token",token)
     if(!token) {
         console.error('no token')
-        return res.status(400).json({error:"invalid link"})
+        return res.status(404).json({error:"No token provided"})
     }
     const db_token=await Verification_token.findOne({where: {token}})
     console.log("db_token",db_token)
@@ -21,6 +22,7 @@ async function authenticate_verification_token(req,res,next){
         return res.status(400).json({ error: "Verification link has expired. Please request a new one." });
     }
     req.user_id=db_token.dataValues.user_id;
+    console.log('token authenticated')
     next();
 }
 
