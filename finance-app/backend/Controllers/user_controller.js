@@ -7,7 +7,6 @@ async function delete_account(req,res){
     const changes=await Delete_user_account(id)
     console.log("user deleted ",changes)
     if (changes>0) {
-        await delete_token(req.user_id,Refresh_Token);
         clear_tokens(res);
          res.status(200).json({message:'user deleted'})
         console.log('deleting response sent');

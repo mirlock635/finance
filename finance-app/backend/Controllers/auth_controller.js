@@ -59,7 +59,7 @@ async function validate_user(req,res){
 async function handle_password_request(req, res) {
         const { email } = req.body;
         console.log("searching ,",email)
-        let id = await Search_user({ email }, true); 
+        let {id} = await search_user_by_email(email) 
         console.log("id ",id) // Search user by email
         if (id && id >= 0) {
             await delete_token(id,Reset_Token);  // Remove old reset tokens
@@ -70,7 +70,7 @@ async function handle_password_request(req, res) {
             res.status(400).json({ error: "failed email sending " });
         }
 
-        res.status(200).json({ message: " a reset link has been sent." });
+        res.status(200).json({ message: "reset link has been sent." });
 }
 
 async function handle_password_reset(req, res) {
