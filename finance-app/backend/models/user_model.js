@@ -11,3 +11,4 @@ const USER= sequelize.define('users', {
     },{underscored: true, timestamps: false, });
   
 module.exports =USER
+//add user delete for no verified after a day

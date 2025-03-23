@@ -11,7 +11,7 @@ async function authenticate_verification_token(req,res,next){
     console.log("token",token)
     if(!token) {
         console.error('no token')
-        return res.status(400).json({error:"invalid link"})
+        return res.status(404).json({error:"No token provided"})
     }
     const db_token=await Verification_token.findOne({where: {token}})
     console.log("db_token",db_token)
@@ -21,6 +21,7 @@ async function authenticate_verification_token(req,res,next){
         return res.status(400).json({ error: "Verification link has expired. Please request a new one." });
     }
     req.user_id=db_token.dataValues.user_id;
+    console.log('token authenticated')
     next();
 }
 

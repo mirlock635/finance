@@ -10,9 +10,9 @@ authenticate_verification_token=async_handler(authenticate_verification_token);
 
 
 router.use(express.json())
-router.post("/signin",validate_credentials,auth_controller.sign_up)
+router.post("/signup",validate_credentials,auth_controller.sign_up)
 router.post("/login",validate_credentials,auth_controller.login)
-router.post("/verify/:v_token",authenticate_verification_token,auth_controller.validate_user)
+router.post("/user_verification/:v_token",authenticate_verification_token,auth_controller.validate_user)
 
 router.use(cookieParser())
 //router.get("/logout",auth_controller.logout) 

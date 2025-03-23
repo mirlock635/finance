@@ -1,7 +1,7 @@
 
 const Refresh_Token=require("../models/refresh_token_model")
 const Reset_Token=require("../models/reset_token_model")
-
+const {async_controller}=require("../utils/async_controller")
 const {validate,search_user_by_email,verify_user,Add_user,
     Reset_password}= require("../Service/auth_service")
 
@@ -48,9 +48,10 @@ async function login(req,res){
 }
 
 async function validate_user(req,res){
+    console.log("validating user")
     let result =await validate(req)
     console.log("result",result)
-    if(!result) return res.status(400).json({error:"validation error"}) 
+    if(!result) return res.status(500).json({error:"Cannot validate user, please try later."}) 
     console.log("user_verified")
     res.status(200).json({message:"user verified"})
 }
@@ -95,4 +96,4 @@ async function handle_password_reset(req, res) {
 }
 
 module_obj={validate_user,sign_up,login,handle_password_request,handle_password_reset}
-module.exports=async_controller(module_obj)
+module.exports=module_obj
