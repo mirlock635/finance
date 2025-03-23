@@ -2,10 +2,12 @@ const express=require('express')
 const cookieParser = require('cookie-parser');
 const router =express.Router()
 const {validate_credentials,validate_new_password,validate_reset_email} = require("../middlewares/validate_credentials");
-const {async_controller}=require("../utils/async_controller")
+const {async_controller,async_handler}=require("../utils/async_controller")
 const auth_controller_raw=require("../Controllers/auth_controller")
 const auth_controller =  async_controller(auth_controller_raw) // can be moved to the service export
 let {authenticate_verification_token}=require("../middlewares/authenticate")
+authenticate_verification_token=async_handler(authenticate_verification_token);
+
 
 router.use(express.json())
 router.post("/signin",validate_credentials,auth_controller.sign_up)

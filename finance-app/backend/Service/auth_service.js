@@ -29,8 +29,8 @@ async function verify_user(user) {
     const user_id=req.user_id
     console.log("user_id",req.user_id)
     const result =await User.update({is_verified:true},{where:{id:user_id}})
-    if(!result) return(undefined) 
-    //delete the token
+    if(!result) return(false) 
+    await Verification_token.destroy({ where: { user_id } });
     return true
    }
 async function Add_user(user) {
@@ -40,7 +40,7 @@ async function Add_user(user) {
             email: user.email,
             password: hashed_password })).dataValues;  console.log('user Added ',new_user);
         let token=generate_verification_token();
-        await save_token(new_user.id,token,Verification_token,4)
+        await save_token(new_user.id,token,Verification_token,1)
         return {user_id:new_user.id,token}; // Return the last inserted ID
     } catch (err) {//re throw for debugging 
         console.error(err);

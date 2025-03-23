@@ -9,7 +9,6 @@ const JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
 async function authenticate_verification_token(req,res,next){
     let token=req.params.v_token;
     console.log("token",token)
-
     if(!token) {
         console.error('no token')
         return res.status(400).json({error:"invalid link"})
@@ -17,6 +16,10 @@ async function authenticate_verification_token(req,res,next){
     const db_token=await Verification_token.findOne({where: {token}})
     console.log("db_token",db_token)
     if(!db_token) return res.status(400).json({error:"invalid verification link"})
+    if (db_token.expires_at < Date.now()) {
+        await Verification_token.destroy({ where: { token } }); // Cleanup expired token
+        return res.status(400).json({ error: "Verification link has expired. Please request a new one." });
+    }
     req.user_id=db_token.dataValues.user_id;
     next();
 }

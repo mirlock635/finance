@@ -2,9 +2,12 @@
 const Refresh_Token=require("../models/refresh_token_model")
 const Reset_Token=require("../models/reset_token_model")
 
-const {validate,search_user_by_email,verify_user,Add_user,Reset_password}=require("../Service/auth_service")
+const {validate,search_user_by_email,verify_user,Add_user,
+    Reset_password}= require("../Service/auth_service")
+
 const {save_token,get_token,delete_token,generate_refresh_token,generate_access_token,
-    generate_reset_token,set_tokens}=require("../Service/token_service")
+    generate_reset_token,set_tokens}= require("../Service/token_service")
+
 const send_email=require("../Service/email_service");
 
 async function sign_up(req,res){
@@ -90,4 +93,6 @@ async function handle_password_reset(req, res) {
         await delete_token(user_id,Reset_Token);
         res.json({ message: "Password reset successfully" });
 }
-module.exports={validate_user,sign_up,login,handle_password_request,handle_password_reset}
+
+module_obj={validate_user,sign_up,login,handle_password_request,handle_password_reset}
+module.exports=async_controller(module_obj)
