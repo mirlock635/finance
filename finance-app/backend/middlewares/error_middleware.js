@@ -9,7 +9,7 @@
         });
     }
 
-    const default_error={ status: 500, message: "Internal Server Error." }
+const default_error={ status: 500, message: "Internal Server Error." }
 const errorMapping = {
     // Custom Errors
     "Email not verified": { status: 403, message: "Email not verified. Please check your inbox." },

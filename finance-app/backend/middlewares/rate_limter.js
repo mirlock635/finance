@@ -12,7 +12,8 @@ let rateLimits = {
 rateLimits=Object.fromEntries( // make object out of an array
     Object.entries(rateLimits) // generate an array from rateLimits object
     .map( ([path , max]) => //replace the max by limiter in the  array
-            [ path , rateLimit( {windowMs: WINDOW_MS, max, message: GENERAL_MESSAGE })]));
+            [ path , rateLimit( {windowMs: WINDOW_MS, max, message: GENERAL_MESSAGE} )   ]
+        ));
 
 const Dynamic_rate_limiter = (req, res, next) => {
     let path=req.path.split('/')[1];

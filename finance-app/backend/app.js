@@ -23,6 +23,17 @@ app.use(morgan("dev"));
 
 app.use("/auth",auth_route)
 app.use("/user",user_route)
+/*
+app.use('/css',express.static('assets/css'))
+app.use('/js',express.static('assets/js'))
+app.use('/img',express.static('assets/img'))
+app.use("/",express.static('assets'))
+app.use("/",(req,res)=>{
+  const file_path=path.join(__dirname,"assets/signup.html")
+  console.log("path "+file_path)
+  res.sendFile(file_path)
+})
+*/
 app.use(error_handler)
 
 module.exports=app

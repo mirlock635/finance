@@ -1,11 +1,12 @@
 const Refresh_Token=require("../models/refresh_token_model")
 const {save_token,get_token,delete_token,generate_access_token
     ,generate_refresh_token,set_tokens}=require("../Service/token_service")
-const Verification_token=require('../models/verification_token_model')
+const Verification_token=require('../models/verification_token_model');
 const jwt=require('jsonwebtoken')
 
 const  JWT_SECRET=process.env.JWT_SECRET
 const JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET
+
 async function authenticate_verification_token(req,res,next){
     let token=req.params.v_token;
     console.log("token",token)
