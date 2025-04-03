@@ -18,18 +18,11 @@ const emails_details={
   "reset": {
     url:"http://127.0.0.1:3000/auth/reset_pass.html",
     subject:'reset',
-<<<<<<< HEAD
     text:"Click this link to reset your Password"
 
 }
   ,"verification": {
   url:"http://127.0.0.1:3000/auth/user_verification",
-=======
-    text:"Click this link to reset your Password"},
-  
-    "verification": {
-  url:"http://127.0.0.1:3000/auth/verify",
->>>>>>> main
   subject:'verification',
   text:"Click this link to verify your account"}
 }
